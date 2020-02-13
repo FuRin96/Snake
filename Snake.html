@@ -27,8 +27,6 @@
       text-align: center;
     }
 
-
-
     #easy:hover,
     #medium:hover,
     #hard:hover {
@@ -60,6 +58,7 @@
   var difficulty; // difficulty = 'easy' 'medium' 'hard'
   var gameState;
   var dead;
+
   // snake-----------------------
   var snakePos;
   var snakeDir;
@@ -124,12 +123,13 @@
   function update() {
     paintBg();
 
+    // difficulty selector
+    document.getElementById("easy").addEventListener("click", easyMode);
+    document.getElementById("medium").addEventListener("click", mediumMode);
+    document.getElementById("hard").addEventListener("click", hardMode);
+
     switch (gameState) {
       case 'start':
-        // difficulty selector
-        document.getElementById("easy").addEventListener("click", easyMode);
-        document.getElementById("medium").addEventListener("click", mediumMode);
-        document.getElementById("hard").addEventListener("click", hardMode);
         if (difficulty != 'easy') {
           paintWall();
         }
@@ -138,17 +138,14 @@
       case 'playing': // playing state
         paintSnake();
         paintApple();
+
         if (difficulty != 'easy') {
           createWalls();
         }
-        snakePos.x += snakeDir.x;
-        snakePos.y += snakeDir.y;
+
         snakeMovement();
-        snakeTrail.push({
-          x: snakePos.x,
-          y: snakePos.y
-        });
         eatApple();
+        
         if (snakeDir.x != 0 || snakeDir.y != 0) {
           checkCollisionSnake();
         }
@@ -180,7 +177,7 @@
     }
   }
 
-// check snake collision with itself
+  // check snake collision with itself
   function checkCollisionSnake() {
     for (var i = snakeTrail.length - 2; i >= 0; i--) {
       if (snakeTrail[snakeTrail.length - 1].x == snakeTrail[i].x && snakeTrail[snakeTrail.length - 1].y == snakeTrail[i]
@@ -191,8 +188,10 @@
     }
   }
 
-// snake movement edges
   function snakeMovement() {
+    snakePos.x += snakeDir.x;
+    snakePos.y += snakeDir.y;
+
     if (snakePos.x >= 21) {
       snakePos.x = 0;
     } else if (snakePos.x < 0) {
@@ -204,6 +203,11 @@
     } else if (snakePos.y < 0) {
       snakePos.y = 20;
     }
+
+    snakeTrail.push({
+      x: snakePos.x,
+      y: snakePos.y
+    });
   }
 
   // APPLE----------------------------------------------------------------------
