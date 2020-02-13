@@ -1,0 +1,361 @@
+<html>
+
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Bangers&display=swap" rel="stylesheet">
+  <title>Snek</title>
+</head>
+
+<body>
+  <h1>S n e k</h1>
+  <h2 class="points"></h2>
+  <div><span id="easy"> Easy</span><span> </span><span id="medium"> Medium</span></div>
+  <br />
+
+  <style>
+    html {
+      text-align: center;
+      font-family: 'Bangers', cursive;
+      background-color: darkslategrey;
+    }
+
+    #easy,
+    #medium {
+      padding: 3px;
+      background-color: rgb(66, 165, 91);
+      font-size: 20px;
+      text-align: center;
+    }
+
+
+
+    #easy:hover,
+    #medium:hover {
+      cursor: pointer;
+      background-color: red;
+    }
+  </style>
+</body>
+
+</html>
+
+<script>
+  var canvas = document.createElement("canvas");
+  setInterval(update, 1000 / 15);
+
+  canvas.style = "position:absolute; left:50%; width:400px; margin-left: -200px;";
+  canvas.width = 400;
+  canvas.height = 400;
+
+  document.body.appendChild(canvas);
+
+  document.addEventListener("keydown", keyPush);
+
+  var ctx = canvas.getContext("2d");
+
+  const rowSize = 20;
+  const colSize = 20;
+
+  var dificultad;
+  var gameState;
+  var dead;
+  // snake-----------------------
+  var snakePos;
+  var snakeDir;
+  var snakeTrail;
+  var snakeSize;
+
+  // apple------------------------
+  var applePos;
+
+  // points-----------------------
+  var points = 0;
+
+  function setText() {
+    ctx.fillStyle = 'white';
+    ctx.font = "20px 'Montserrat', sans-serif"
+    ctx.fillText('Press space to start', 115, 200);
+  }
+
+  function deathScreen() {
+    ctx.fillStyle = 'red';
+    ctx.font = "20px 'Montserrat', sans-serif"
+    ctx.fillText('You lose', 160, 200);
+  }
+
+  function start() {
+    gameState = 'start';
+    paintBg();
+    if (dead == true) {
+      deathScreen();
+    } else {
+      setText();
+    }
+  }
+
+  start();
+
+  function init() {
+    points = 0;
+
+    snakeDir = {
+      x: 0,
+      y: 0
+    };
+
+    snakePos = {
+      x: 10,
+      y: 10
+    };
+
+    snakeTrail = [];
+
+    snakeSize = 5;
+
+    // posicion de la manzana haciendo que esté alineada con la serpiente
+    applePosRandomizer();
+  }
+
+  function update() {
+    paintBg();
+
+    switch (gameState) {
+      case 'start':
+        start();
+        document.getElementById("easy").addEventListener("click", easyMode);
+        document.getElementById("medium").addEventListener("click", mediumMode);
+        if (dificultad == 'medium') {
+          paintWall();
+        }
+        break;
+      case 'playing':
+        paintSnake();
+        paintApple();
+        if (dificultad == 'medium') {
+          createWalls();
+        }
+        snakePos.x += snakeDir.x;
+        snakePos.y += snakeDir.y;
+        snakeMovement();
+        snakeTrail.push({
+          x: snakePos.x,
+          y: snakePos.y
+        });
+        checkCollisionApple();
+        if (snakeDir.x != 0 || snakeDir.y != 0) {
+          checkCollisionSnake();
+        }
+        break;
+      case 'death':
+        start();
+        break;
+    }
+    document.querySelector('.points').innerHTML = 'S c o r e :  ' + points;
+  }
+
+  // BACKGROUND----------------------------------------------------
+  function paintBg() {
+    ctx.fillStyle = "black";
+
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // SNAKE---------------------------------------------------------------
+  function paintSnake() {
+    ctx.fillStyle = "lime";
+
+    for (var i = 0; i < snakeTrail.length; i++) {
+      ctx.fillRect(snakeTrail[i].x * rowSize, snakeTrail[i].y * colSize, rowSize - 2, colSize - 2);
+    }
+
+    if (snakeTrail.length == snakeSize) {
+      snakeTrail.shift();
+    }
+  }
+
+  function checkCollisionSnake() {
+    for (var i = snakeTrail.length - 2; i >= 0; i--) {
+      if (snakeTrail[snakeTrail.length - 1].x == snakeTrail[i].x && snakeTrail[snakeTrail.length - 1].y == snakeTrail[i]
+        .y) {
+        gameState = 'death';
+        dead = true;
+      }
+    }
+  }
+
+  function snakeMovement() {
+    if (snakePos.x >= rowSize) {
+      snakePos.x = 0;
+    } else if (snakePos.x < 0) {
+      snakePos.x = rowSize;
+    }
+
+    if (snakePos.y >= colSize) {
+      snakePos.y = 0;
+    } else if (snakePos.y < 0) {
+      snakePos.y = colSize;
+    }
+  }
+
+  // APPLE----------------------------------------------------------------------
+  function paintApple() {
+    ctx.fillStyle = "red";
+
+    ctx.fillRect(applePos.x, applePos.y, rowSize - 2, colSize - 2);
+  }
+
+  function applePosRandomizer() {
+    applePos = {
+      x: Math.floor(Math.random() * (canvas.width / rowSize)) * rowSize,
+      y: Math.floor(Math.random() * (canvas.height / colSize)) * colSize
+    }
+
+    for (var i = 0; i < snakeTrail.length; i++) {
+      if (applePos.x / rowSize == snakeTrail[i].x && applePos.y / colSize == snakeTrail[i].y) {
+        applePosRandomizer();
+      }
+    }
+
+    for (var i = 2; i < 8; i++) {
+      if (applePos.x / rowSize == i && (applePos.y / colSize == 2 || applePos.y / colSize == 17)) {
+        applePosRandomizer();
+      }
+      if ((applePos.x / rowSize == 2 || applePos.x / rowSize == 17) && applePos.y / colSize == i) {
+        applePosRandomizer();
+      }
+    }
+
+    for (var i = 12; i < 18; i++) {
+      if (applePos.x / rowSize == i && (applePos.y / colSize == 2 || applePos.y / colSize == 17)) {
+        applePosRandomizer();
+      }
+      if ((applePos.x / rowSize == 2 || applePos.x / rowSize == 17) && applePos.y / colSize == i) {
+        applePosRandomizer();
+      }
+    }
+  }
+
+  function checkCollisionApple() {
+    if (snakePos.x == applePos.x / rowSize && snakePos.y == applePos.y / colSize) {
+      points++;
+      snakeSize++;
+      applePosRandomizer();
+    }
+  }
+
+  // MODES--------------------------------------------------------------------------------
+  function easyMode() {
+    if (gameState != 'playing')
+      dificultad = 'easy';
+  }
+
+  function mediumMode() {
+    if (gameState != 'playing')
+      dificultad = 'medium';
+  }
+
+  // WALLS--------------------------------------------------------------------------------
+  function createWalls() {
+    paintWall();
+    checkCollisionWall();
+  }
+
+  function paintWall() {
+    ctx.fillStyle = "grey";
+
+    const xLeft = 2;
+    const xRight = 17;
+    const yUp = 2;
+    const yDown = 17;
+
+    for (var i = 2; i < 8; i++) {
+      ctx.fillRect(xLeft * rowSize, i * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(i * rowSize, yUp * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(xRight * rowSize, i * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(i * rowSize, yDown * colSize, rowSize - 2, colSize - 2);
+    }
+
+    for (var i = 17; i > 11; i--) {
+      ctx.fillRect(i * rowSize, yUp * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(xLeft * rowSize, i * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(xRight * rowSize, i * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(i * rowSize, yDown * colSize, rowSize - 2, colSize - 2);
+    }
+  }
+
+  function checkCollisionWall() {
+    for (var i = 2; i < 8; i++) {
+      if (snakePos.x == i && (snakePos.y == 2 || snakePos.y == 17)) {
+        gameState = 'death';
+        dead = true;
+      }
+      if ((snakePos.x == 2 || snakePos.x == 17) && snakePos.y == i) {
+        gameState = 'death';
+        dead = true;
+      }
+    }
+
+    for (var i = 12; i < 18; i++) {
+      if (snakePos.x == i && (snakePos.y == 2 || snakePos.y == 17)) {
+        gameState = 'death';
+        dead = true;
+      }
+      if ((snakePos.x == 2 || snakePos.x == 17) && snakePos.y == i) {
+        gameState = 'death';
+        dead = true;
+      }
+    }
+  }
+
+  // MOVEMENT----------------------------------------------------------------
+  function keyPush(evt) {
+    console.log({
+      "Tecla pulsada: ": evt.keyCode
+    });
+
+    switch (evt.keyCode) {
+      case 65:
+      case 37: // IZQUIERDA
+        if (snakeDir.x != 1) {
+          snakeDir = {
+            x: -1,
+            y: 0
+          };
+        }
+        break;
+      case 87:
+      case 38: // ARRIBA
+        if (snakeDir.y != 1) {
+          snakeDir = {
+            x: 0,
+            y: -1
+          };
+        }
+        break;
+      case 68:
+      case 39: // DERECHA
+        if (snakeDir.x != -1) {
+          snakeDir = {
+            x: 1,
+            y: 0
+          };
+        }
+        break;
+      case 83:
+      case 40: // ABAJO
+        if (snakeDir.y != -1) {
+          snakeDir = {
+            x: 0,
+            y: 1
+          };
+        }
+        break;
+      case 32: // EMPEZAR PARTIDA
+        if (gameState == 'start') {
+          gameState = 'playing';
+          init();
+          dead = false;
+        }
+        break;
+    }
+  }
+</script>
