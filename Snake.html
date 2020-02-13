@@ -57,7 +57,7 @@
   const rowSize = 20;
   const colSize = 20;
 
-  var dificulty; // dificulty = 'easy' 'medium' 'hard'
+  var difficulty; // difficulty = 'easy' 'medium' 'hard'
   var gameState;
   var dead;
   // snake-----------------------
@@ -103,7 +103,7 @@
       y: 0
     };
 
-    if (dificulty != 'hard') {
+    if (difficulty != 'hard') {
       snakePos = {
         x: 10,
         y: 10
@@ -118,7 +118,6 @@
 
     snakeSize = 5;
 
-    // posicion de la manzana haciendo que esté alineada con la serpiente
     applePosRandomizer();
   }
 
@@ -127,19 +126,19 @@
 
     switch (gameState) {
       case 'start':
-
+        // difficulty selector
         document.getElementById("easy").addEventListener("click", easyMode);
         document.getElementById("medium").addEventListener("click", mediumMode);
         document.getElementById("hard").addEventListener("click", hardMode);
-        if (dificulty != 'easy') {
+        if (difficulty != 'easy') {
           paintWall();
         }
         start();
         break;
-      case 'playing':
+      case 'playing': // playing state
         paintSnake();
         paintApple();
-        if (dificulty != 'easy') {
+        if (difficulty != 'easy') {
           createWalls();
         }
         snakePos.x += snakeDir.x;
@@ -149,7 +148,7 @@
           x: snakePos.x,
           y: snakePos.y
         });
-        checkCollisionApple();
+        eatApple();
         if (snakeDir.x != 0 || snakeDir.y != 0) {
           checkCollisionSnake();
         }
@@ -181,6 +180,7 @@
     }
   }
 
+// check snake collision with itself
   function checkCollisionSnake() {
     for (var i = snakeTrail.length - 2; i >= 0; i--) {
       if (snakeTrail[snakeTrail.length - 1].x == snakeTrail[i].x && snakeTrail[snakeTrail.length - 1].y == snakeTrail[i]
@@ -191,6 +191,7 @@
     }
   }
 
+// snake movement edges
   function snakeMovement() {
     if (snakePos.x >= 21) {
       snakePos.x = 0;
@@ -224,7 +225,7 @@
       }
     }
 
-    if (dificulty == 'medium') {
+    if (difficulty == 'medium') {
       for (var i = 2; i < 8; i++) {
         if (applePos.x / rowSize == i && (applePos.y / colSize == 2 || applePos.y / colSize == 18)) {
           applePosRandomizer();
@@ -244,7 +245,7 @@
       }
     }
 
-    if (dificulty == 'hard') {
+    if (difficulty == 'hard') {
       for (var i = 0; i <= rowSize; i++) {
         if ((applePos.x / rowSize == 10 && applePos.y / colSize == i) || (applePos.x / rowSize == i && applePos.y / colSize == 10)) {
           applePosRandomizer();
@@ -253,7 +254,7 @@
     }
   }
 
-  function checkCollisionApple() {
+  function eatApple() {
     if (snakePos.x == applePos.x / rowSize && snakePos.y == applePos.y / colSize) {
       points++;
       snakeSize++;
@@ -264,17 +265,17 @@
   // MODES--------------------------------------------------------------------------------
   function easyMode() {
     if (gameState != 'playing')
-      dificulty = 'easy';
+      difficulty = 'easy';
   }
 
   function mediumMode() {
     if (gameState != 'playing')
-      dificulty = 'medium';
+      difficulty = 'medium';
   }
 
   function hardMode() {
     if (gameState != 'playing')
-      dificulty = 'hard';
+      difficulty = 'hard';
   }
 
   // WALLS--------------------------------------------------------------------------------
@@ -285,7 +286,7 @@
 
   function paintWall() {
     ctx.fillStyle = "grey";
-    if (dificulty == 'medium') {
+    if (difficulty == 'medium') {
 
       const xLeft = 2;
       const xRight = 18;
@@ -293,20 +294,20 @@
       const yDown = 18;
 
       for (var i = 2; i < 8; i++) {
-        ctx.fillRect(xLeft * rowSize, i * colSize, rowSize - 2, colSize - 2);
-        ctx.fillRect(i * rowSize, yUp * colSize, rowSize - 2, colSize - 2);
-        ctx.fillRect(xRight * rowSize, i * colSize, rowSize - 2, colSize - 2);
-        ctx.fillRect(i * rowSize, yDown * colSize, rowSize - 2, colSize - 2);
+        ctx.fillRect(xLeft * rowSize, i * colSize, rowSize - 2, colSize - 2); // vertical upper row left
+        ctx.fillRect(i * rowSize, yUp * colSize, rowSize - 2, colSize - 2); // horizontal upper row left
+        ctx.fillRect(xRight * rowSize, i * colSize, rowSize - 2, colSize - 2); // vertical upper row right
+        ctx.fillRect(i * rowSize, yDown * colSize, rowSize - 2, colSize - 2); // horizontall down row left
       }
 
       for (var i = 18; i > 12; i--) {
-        ctx.fillRect(i * rowSize, yUp * colSize, rowSize - 2, colSize - 2);
-        ctx.fillRect(xLeft * rowSize, i * colSize, rowSize - 2, colSize - 2);
-        ctx.fillRect(xRight * rowSize, i * colSize, rowSize - 2, colSize - 2);
-        ctx.fillRect(i * rowSize, yDown * colSize, rowSize - 2, colSize - 2);
+        ctx.fillRect(i * rowSize, yUp * colSize, rowSize - 2, colSize - 2); // horizontal upper row right
+        ctx.fillRect(xLeft * rowSize, i * colSize, rowSize - 2, colSize - 2); // vertical down row left
+        ctx.fillRect(xRight * rowSize, i * colSize, rowSize - 2, colSize - 2); // vertical down row right
+        ctx.fillRect(i * rowSize, yDown * colSize, rowSize - 2, colSize - 2); // horizontal down row right
       }
     }
-    if (dificulty == 'hard') {
+    if (difficulty == 'hard') {
       const x = 10;
       const y = 10;
 
@@ -318,31 +319,31 @@
   }
 
   function checkCollisionWall() {
-    if (dificulty == 'medium') {
+    if (difficulty == 'medium') {
       for (var i = 2; i < 8; i++) {
-        if (snakePos.x == i && (snakePos.y == 2 || snakePos.y == 18)) {
+        if (snakePos.x == i && (snakePos.y == 2 || snakePos.y == 18)) { // up and down left collision
           gameState = 'death';
           dead = true;
         }
-        if ((snakePos.x == 2 || snakePos.x == 18) && snakePos.y == i) {
+        if ((snakePos.x == 2 || snakePos.x == 18) && snakePos.y == i) { // left and right up collision
           gameState = 'death';
           dead = true;
         }
       }
 
       for (var i = 13; i < 19; i++) {
-        if (snakePos.x == i && (snakePos.y == 2 || snakePos.y == 18)) {
+        if (snakePos.x == i && (snakePos.y == 2 || snakePos.y == 18)) { // up and down right collision
           gameState = 'death';
           dead = true;
         }
-        if ((snakePos.x == 2 || snakePos.x == 18) && snakePos.y == i) {
+        if ((snakePos.x == 2 || snakePos.x == 18) && snakePos.y == i) { // left and right down collision
           gameState = 'death';
           dead = true;
         }
       }
     }
 
-    if (dificulty == 'hard') {
+    if (difficulty == 'hard') {
       for (var i = 0; i <= rowSize; i++) {
         if (snakePos.x == i && snakePos.y == 10) {
           gameState = 'death';
@@ -364,7 +365,7 @@
 
     switch (evt.keyCode) {
       case 65:
-      case 37: // IZQUIERDA
+      case 37: // LEFT
         if (snakeDir.x != 1) {
           snakeDir = {
             x: -1,
@@ -373,7 +374,7 @@
         }
         break;
       case 87:
-      case 38: // ARRIBA
+      case 38: // UP
         if (snakeDir.y != 1) {
           snakeDir = {
             x: 0,
@@ -382,7 +383,7 @@
         }
         break;
       case 68:
-      case 39: // DERECHA
+      case 39: // RIGHT
         if (snakeDir.x != -1) {
           snakeDir = {
             x: 1,
@@ -391,7 +392,7 @@
         }
         break;
       case 83:
-      case 40: // ABAJO
+      case 40: // DOWN
         if (snakeDir.y != -1) {
           snakeDir = {
             x: 0,
@@ -399,7 +400,7 @@
           };
         }
         break;
-      case 32: // EMPEZAR PARTIDA
+      case 32: // START GAME
         if (gameState == 'start') {
           gameState = 'playing';
           init();
