@@ -192,16 +192,16 @@
   }
 
   function snakeMovement() {
-    if (snakePos.x >= rowSize) {
+    if (snakePos.x >= 21) {
       snakePos.x = 0;
     } else if (snakePos.x < 0) {
-      snakePos.x = rowSize;
+      snakePos.x = 21;
     }
 
-    if (snakePos.y >= colSize) {
+    if (snakePos.y >= 21) {
       snakePos.y = 0;
     } else if (snakePos.y < 0) {
-      snakePos.y = colSize;
+      snakePos.y = 21;
     }
   }
 
