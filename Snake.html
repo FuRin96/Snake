@@ -31,8 +31,8 @@
     #medium:hover,
     #hard:hover {
       cursor: pointer;
-      background-color: red;
     }
+
   </style>
 </body>
 
@@ -71,6 +71,7 @@
   // points-----------------------
   var points = 0;
 
+// STYLES----------------------------------------------------------------------
   function setText() {
     ctx.fillStyle = 'white';
     ctx.font = "20px 'Montserrat', sans-serif"
@@ -82,6 +83,40 @@
     ctx.font = "20px 'Montserrat', sans-serif"
     ctx.fillText('You lose', 170, 210);
   }
+
+  function buttons() {
+    document.getElementById("easy").addEventListener("mouseover", function() {
+      document.getElementById("easy").style.backgroundColor = "red";
+    });
+
+    document.getElementById("medium").addEventListener("mouseover", function() {
+      document.getElementById("medium").style.backgroundColor = "red";
+    });
+
+    document.getElementById("hard").addEventListener("mouseover", function() {
+      document.getElementById("hard").style.backgroundColor = "red";
+    });
+
+    if (difficulty == 'easy') {
+      document.getElementById("easy").style.backgroundColor = "yellow";
+    } else {
+        document.getElementById("easy").style.backgroundColor = "rgb(66, 165, 91)";
+    }
+
+    if (difficulty == 'medium') {
+      document.getElementById("medium").style.backgroundColor = "yellow";
+    } else {
+        document.getElementById("medium").style.backgroundColor = "rgb(66, 165, 91)";
+    }
+
+    if (difficulty == 'hard') {
+      document.getElementById("hard").style.backgroundColor = "yellow";
+    } else {
+        document.getElementById("hard").style.backgroundColor = "rgb(66, 165, 91)";
+    }
+  }
+
+//----------------------------------------------------------------------------------
 
   function start() {
     gameState = 'start';
@@ -95,6 +130,7 @@
   start();
 
   function init() {
+
     points = 0;
 
     snakeDir = {
@@ -145,7 +181,7 @@
 
         snakeMovement();
         eatApple();
-        
+
         if (snakeDir.x != 0 || snakeDir.y != 0) {
           checkCollisionSnake();
         }
@@ -154,6 +190,8 @@
         start();
         break;
     }
+
+    buttons();
     document.querySelector('.points').innerHTML = 'S c o r e :  ' + points;
   }
 
