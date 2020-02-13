@@ -8,7 +8,11 @@
 <body>
   <h1>S n e k</h1>
   <h2 class="points"></h2>
+<<<<<<< HEAD
   <div><span id="easy"> Easy</span><span> </span><span id="medium"> Medium</span><span> </span><span id="hard"> Hard</span></div>
+=======
+  <div><span id="easy"> Easy</span><span> </span><span id="medium"> Medium</span></div>
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
   <br />
 
   <style>
@@ -19,8 +23,12 @@
     }
 
     #easy,
+<<<<<<< HEAD
     #medium,
     #hard {
+=======
+    #medium {
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
       padding: 3px;
       background-color: rgb(66, 165, 91);
       font-size: 20px;
@@ -30,8 +38,12 @@
 
 
     #easy:hover,
+<<<<<<< HEAD
     #medium:hover,
     #hard:hover {
+=======
+    #medium:hover {
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
       cursor: pointer;
       background-color: red;
     }
@@ -45,8 +57,13 @@
   setInterval(update, 1000 / 15);
 
   canvas.style = "position:absolute; left:50%; width:400px; margin-left: -200px;";
+<<<<<<< HEAD
   canvas.width = 420;
   canvas.height = 420;
+=======
+  canvas.width = 400;
+  canvas.height = 400;
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
 
   document.body.appendChild(canvas);
 
@@ -57,7 +74,11 @@
   const rowSize = 20;
   const colSize = 20;
 
+<<<<<<< HEAD
   var dificulty; // dificulty = 'easy' 'medium' 'hard'
+=======
+  var dificultad;
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
   var gameState;
   var dead;
   // snake-----------------------
@@ -75,17 +96,29 @@
   function setText() {
     ctx.fillStyle = 'white';
     ctx.font = "20px 'Montserrat', sans-serif"
+<<<<<<< HEAD
     ctx.fillText('Press space to start', 125, 210);
+=======
+    ctx.fillText('Press space to start', 115, 200);
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
   }
 
   function deathScreen() {
     ctx.fillStyle = 'red';
     ctx.font = "20px 'Montserrat', sans-serif"
+<<<<<<< HEAD
     ctx.fillText('You lose', 170, 210);
+=======
+    ctx.fillText('You lose', 160, 200);
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
   }
 
   function start() {
     gameState = 'start';
+<<<<<<< HEAD
+=======
+    paintBg();
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
     if (dead == true) {
       deathScreen();
     } else {
@@ -103,6 +136,7 @@
       y: 0
     };
 
+<<<<<<< HEAD
     if (dificulty != 'hard') {
       snakePos = {
         x: 10,
@@ -114,6 +148,13 @@
         y: 5
       };
     }
+=======
+    snakePos = {
+      x: 10,
+      y: 10
+    };
+
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
     snakeTrail = [];
 
     snakeSize = 5;
@@ -127,6 +168,7 @@
 
     switch (gameState) {
       case 'start':
+<<<<<<< HEAD
 
         document.getElementById("easy").addEventListener("click", easyMode);
         document.getElementById("medium").addEventListener("click", mediumMode);
@@ -135,11 +177,23 @@
           paintWall();
         }
         start();
+=======
+        start();
+        document.getElementById("easy").addEventListener("click", easyMode);
+        document.getElementById("medium").addEventListener("click", mediumMode);
+        if (dificultad == 'medium') {
+          paintWall();
+        }
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
         break;
       case 'playing':
         paintSnake();
         paintApple();
+<<<<<<< HEAD
         if (dificulty != 'easy') {
+=======
+        if (dificultad == 'medium') {
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
           createWalls();
         }
         snakePos.x += snakeDir.x;
@@ -224,6 +278,7 @@
       }
     }
 
+<<<<<<< HEAD
     if (dificulty == 'medium') {
       for (var i = 2; i < 8; i++) {
         if (applePos.x / rowSize == i && (applePos.y / colSize == 2 || applePos.y / colSize == 18)) {
@@ -249,6 +304,23 @@
         if ((applePos.x / rowSize == 10 && applePos.y / colSize == i) || (applePos.x / rowSize == i && applePos.y / colSize == 10)) {
           applePosRandomizer();
         }
+=======
+    for (var i = 2; i < 8; i++) {
+      if (applePos.x / rowSize == i && (applePos.y / colSize == 2 || applePos.y / colSize == 17)) {
+        applePosRandomizer();
+      }
+      if ((applePos.x / rowSize == 2 || applePos.x / rowSize == 17) && applePos.y / colSize == i) {
+        applePosRandomizer();
+      }
+    }
+
+    for (var i = 12; i < 18; i++) {
+      if (applePos.x / rowSize == i && (applePos.y / colSize == 2 || applePos.y / colSize == 17)) {
+        applePosRandomizer();
+      }
+      if ((applePos.x / rowSize == 2 || applePos.x / rowSize == 17) && applePos.y / colSize == i) {
+        applePosRandomizer();
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
       }
     }
   }
@@ -264,17 +336,25 @@
   // MODES--------------------------------------------------------------------------------
   function easyMode() {
     if (gameState != 'playing')
+<<<<<<< HEAD
       dificulty = 'easy';
+=======
+      dificultad = 'easy';
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
   }
 
   function mediumMode() {
     if (gameState != 'playing')
+<<<<<<< HEAD
       dificulty = 'medium';
   }
 
   function hardMode() {
     if (gameState != 'playing')
       dificulty = 'hard';
+=======
+      dificultad = 'medium';
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
   }
 
   // WALLS--------------------------------------------------------------------------------
@@ -285,6 +365,7 @@
 
   function paintWall() {
     ctx.fillStyle = "grey";
+<<<<<<< HEAD
     if (dificulty == 'medium') {
 
       const xLeft = 2;
@@ -314,10 +395,31 @@
         ctx.fillRect(i * rowSize, y * colSize, rowSize - 2, colSize - 2);
         ctx.fillRect(x * rowSize, i * colSize, rowSize - 2, colSize - 2);
       }
+=======
+
+    const xLeft = 2;
+    const xRight = 17;
+    const yUp = 2;
+    const yDown = 17;
+
+    for (var i = 2; i < 8; i++) {
+      ctx.fillRect(xLeft * rowSize, i * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(i * rowSize, yUp * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(xRight * rowSize, i * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(i * rowSize, yDown * colSize, rowSize - 2, colSize - 2);
+    }
+
+    for (var i = 17; i > 11; i--) {
+      ctx.fillRect(i * rowSize, yUp * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(xLeft * rowSize, i * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(xRight * rowSize, i * colSize, rowSize - 2, colSize - 2);
+      ctx.fillRect(i * rowSize, yDown * colSize, rowSize - 2, colSize - 2);
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
     }
   }
 
   function checkCollisionWall() {
+<<<<<<< HEAD
     if (dificulty == 'medium') {
       for (var i = 2; i < 8; i++) {
         if (snakePos.x == i && (snakePos.y == 2 || snakePos.y == 18)) {
@@ -352,6 +454,27 @@
           gameState = 'death';
           dead = true;
         }
+=======
+    for (var i = 2; i < 8; i++) {
+      if (snakePos.x == i && (snakePos.y == 2 || snakePos.y == 17)) {
+        gameState = 'death';
+        dead = true;
+      }
+      if ((snakePos.x == 2 || snakePos.x == 17) && snakePos.y == i) {
+        gameState = 'death';
+        dead = true;
+      }
+    }
+
+    for (var i = 12; i < 18; i++) {
+      if (snakePos.x == i && (snakePos.y == 2 || snakePos.y == 17)) {
+        gameState = 'death';
+        dead = true;
+      }
+      if ((snakePos.x == 2 || snakePos.x == 17) && snakePos.y == i) {
+        gameState = 'death';
+        dead = true;
+>>>>>>> 531896aee4d7d91525767f92b769a23a6943c1c0
       }
     }
   }
