@@ -18,6 +18,13 @@
       background-color: darkslategrey;
     }
 
+    canvas {
+      position:absolute;
+      left:50%;
+      width:400px;
+      margin-left: -200px;
+    }
+
     #easy,
     #medium,
     #hard {
@@ -32,7 +39,6 @@
     #hard:hover {
       cursor: pointer;
     }
-
   </style>
 </body>
 
@@ -42,7 +48,6 @@
   var canvas = document.createElement("canvas");
   setInterval(update, 1000 / 15);
 
-  canvas.style = "position:absolute; left:50%; width:400px; margin-left: -200px;";
   canvas.width = 420;
   canvas.height = 420;
 
@@ -55,8 +60,8 @@
   const rowSize = 20;
   const colSize = 20;
 
-  var difficulty; // difficulty = 'easy' 'medium' 'hard'
-  var gameState;
+  var difficulty = 'medium'; // 'easy' 'medium' 'hard'
+  var gameState; // 'start' 'playing' 'death'
   var dead;
 
   // snake-----------------------
@@ -71,7 +76,7 @@
   // points-----------------------
   var points = 0;
 
-// STYLES----------------------------------------------------------------------
+  // STYLES----------------------------------------------------------------------
   function setText() {
     ctx.fillStyle = 'white';
     ctx.font = "20px 'Montserrat', sans-serif"
@@ -80,43 +85,16 @@
 
   function deathScreen() {
     ctx.fillStyle = 'red';
-    ctx.font = "20px 'Montserrat', sans-serif"
-    ctx.fillText('You lose', 170, 210);
+    ctx.font = "100px 'Montserrat', sans-serif"
+    ctx.fillText('You lose', 20, 230);
   }
 
-  function buttons() {
-    document.getElementById("easy").addEventListener("mouseover", function() {
-      document.getElementById("easy").style.backgroundColor = "red";
-    });
+  // difficulty selector
+  document.getElementById("easy").addEventListener("click", easyMode);
+  document.getElementById("medium").addEventListener("click", mediumMode);
+  document.getElementById("hard").addEventListener("click", hardMode);
 
-    document.getElementById("medium").addEventListener("mouseover", function() {
-      document.getElementById("medium").style.backgroundColor = "red";
-    });
-
-    document.getElementById("hard").addEventListener("mouseover", function() {
-      document.getElementById("hard").style.backgroundColor = "red";
-    });
-
-    if (difficulty == 'easy') {
-      document.getElementById("easy").style.backgroundColor = "yellow";
-    } else {
-        document.getElementById("easy").style.backgroundColor = "rgb(66, 165, 91)";
-    }
-
-    if (difficulty == 'medium') {
-      document.getElementById("medium").style.backgroundColor = "yellow";
-    } else {
-        document.getElementById("medium").style.backgroundColor = "rgb(66, 165, 91)";
-    }
-
-    if (difficulty == 'hard') {
-      document.getElementById("hard").style.backgroundColor = "yellow";
-    } else {
-        document.getElementById("hard").style.backgroundColor = "rgb(66, 165, 91)";
-    }
-  }
-
-//----------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------
 
   function start() {
     gameState = 'start';
@@ -130,7 +108,6 @@
   start();
 
   function init() {
-
     points = 0;
 
     snakeDir = {
@@ -157,12 +134,27 @@
   }
 
   function update() {
-    paintBg();
 
-    // difficulty selector
-    document.getElementById("easy").addEventListener("click", easyMode);
-    document.getElementById("medium").addEventListener("click", mediumMode);
-    document.getElementById("hard").addEventListener("click", hardMode);
+    // check buttons when difficulty selected
+    if (difficulty == 'easy') {
+      document.getElementById("easy").style.backgroundColor = "yellow";
+    } else {
+      document.getElementById("easy").style.backgroundColor = "rgb(66, 165, 91)";
+    }
+
+    if (difficulty == 'medium') {
+      document.getElementById("medium").style.backgroundColor = "yellow";
+    } else {
+      document.getElementById("medium").style.backgroundColor = "rgb(66, 165, 91)";
+    }
+
+    if (difficulty == 'hard') {
+      document.getElementById("hard").style.backgroundColor = "yellow";
+    } else {
+      document.getElementById("hard").style.backgroundColor = "rgb(66, 165, 91)";
+    }
+
+    paintBg();
 
     switch (gameState) {
       case 'start':
@@ -173,12 +165,11 @@
         break;
       case 'playing': // playing state
         paintSnake();
-        paintApple();
 
         if (difficulty != 'easy') {
           createWalls();
         }
-
+        paintApple();
         snakeMovement();
         eatApple();
 
@@ -191,7 +182,6 @@
         break;
     }
 
-    buttons();
     document.querySelector('.points').innerHTML = 'S c o r e :  ' + points;
   }
 
@@ -217,7 +207,7 @@
 
   // check snake collision with itself
   function checkCollisionSnake() {
-    for (var i = snakeTrail.length - 2; i >= 0; i--) {
+    for (var i = 0; i < snakeTrail.length - 2; i++) {
       if (snakeTrail[snakeTrail.length - 1].x == snakeTrail[i].x && snakeTrail[snakeTrail.length - 1].y == snakeTrail[i]
         .y) {
         gameState = 'death';
@@ -277,7 +267,7 @@
         }
       }
 
-      for (var i = 12; i < 18; i++) {
+      for (var i = 13; i < 19; i++) {
         if (applePos.x / rowSize == i && (applePos.y / colSize == 2 || applePos.y / colSize == 18)) {
           applePosRandomizer();
         }
