@@ -94,10 +94,63 @@ function deathScreen() {
   ctx.fillText('You lose', 20, 230);
 }
 
-// difficulty selector
-document.getElementById("easy").addEventListener("click", easyMode);
-document.getElementById("medium").addEventListener("click", mediumMode);
-document.getElementById("hard").addEventListener("click", hardMode);
+// difficulty selector and button colors
+document.getElementById("easy").addEventListener("click", function() {
+  easyMode()
+  document.getElementById("easy").style.backgroundColor = "yellow";
+  document.getElementById("medium").style.backgroundColor = "rgb(66, 165, 91)";
+  document.getElementById("hard").style.backgroundColor = "rgb(66, 165, 91)";
+});
+document.getElementById("medium").addEventListener("click", function() {
+  mediumMode()
+  document.getElementById("easy").style.backgroundColor = "rgb(66, 165, 91)";
+  document.getElementById("medium").style.backgroundColor = "yellow";
+  document.getElementById("hard").style.backgroundColor = "rgb(66, 165, 91)";
+});
+document.getElementById("hard").addEventListener("click", function() {
+  hardMode()
+  document.getElementById("easy").style.backgroundColor = "rgb(66, 165, 91)";
+  document.getElementById("medium").style.backgroundColor = "rgb(66, 165, 91)";
+  document.getElementById("hard").style.backgroundColor = "yellow";
+});
+
+// mouseover colors
+document.getElementById("easy").addEventListener("mouseover", function() {
+  document.getElementById("easy").style.backgroundColor = "red";
+});
+
+document.getElementById("medium").addEventListener("mouseover", function() {
+  document.getElementById("medium").style.backgroundColor = "red";
+});
+
+document.getElementById("hard").addEventListener("mouseover", function() {
+  document.getElementById("hard").style.backgroundColor = "red";
+});
+
+// mouseout colors
+document.getElementById("easy").addEventListener("mouseout", function() {
+  if (difficulty == 'easy') {
+    document.getElementById("easy").style.backgroundColor = "yellow";
+  } else {
+    document.getElementById("easy").style.backgroundColor = "rgb(66, 165, 91)";
+  }
+});
+
+document.getElementById("medium").addEventListener("mouseout", function() {
+  if (difficulty == 'medium') {
+    document.getElementById("medium").style.backgroundColor = "yellow";
+  } else {
+    document.getElementById("medium").style.backgroundColor = "rgb(66, 165, 91)";
+  }
+});
+
+document.getElementById("hard").addEventListener("mouseout", function() {
+  if (difficulty == 'hard') {
+    document.getElementById("hard").style.backgroundColor = "yellow";
+  } else {
+    document.getElementById("hard").style.backgroundColor = "rgb(66, 165, 91)";
+  }
+});
 
 //----------------------------------------------------------------------------------
 
@@ -142,23 +195,7 @@ function init() {
 function update() {
 
   // check buttons when difficulty selected
-  if (difficulty == 'easy') {
-    document.getElementById("easy").style.backgroundColor = "yellow";
-  } else {
-    document.getElementById("easy").style.backgroundColor = "rgb(66, 165, 91)";
-  }
 
-  if (difficulty == 'medium') {
-    document.getElementById("medium").style.backgroundColor = "yellow";
-  } else {
-    document.getElementById("medium").style.backgroundColor = "rgb(66, 165, 91)";
-  }
-
-  if (difficulty == 'hard') {
-    document.getElementById("hard").style.backgroundColor = "yellow";
-  } else {
-    document.getElementById("hard").style.backgroundColor = "rgb(66, 165, 91)";
-  }
 
   paintBg();
 
@@ -186,6 +223,7 @@ function update() {
       }
       break;
     case 'death':
+      dead = true;
       start();
       break;
   }
@@ -219,7 +257,6 @@ function checkCollisionSnake() {
     if (snakeTrail[snakeTrail.length - 1].x == snakeTrail[i].x && snakeTrail[snakeTrail.length - 1].y == snakeTrail[i]
       .y) {
       gameState = 'death';
-      dead = true;
     }
   }
 }
@@ -392,7 +429,6 @@ function checkCollisionWall() {
       for (var j = 0; j < mapMedium.length; j++) {
         if (mapMedium[i][j] == 1 && snakePos.x == i && snakePos.y == j) {
           gameState = 'death';
-          dead = true;
         }
       }
     }
@@ -403,7 +439,6 @@ function checkCollisionWall() {
       for (var j = 0; j < mapHard.length; j++) {
         if (mapHard[i][j] == 1 && snakePos.x == i && snakePos.y == j) {
           gameState = 'death';
-          dead = true;
         }
       }
     }
@@ -412,10 +447,6 @@ function checkCollisionWall() {
 
 // MOVEMENT----------------------------------------------------------------
 function keyPush(evt) {
-  console.log({
-    "Tecla pulsada: ": evt.keyCode
-  });
-
   switch (evt.keyCode) {
     case 65:
     case 37: // LEFT

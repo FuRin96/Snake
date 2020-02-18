@@ -11,17 +11,18 @@ canvas {
   margin-left: -200px;
 }
 
-#easy,
-#medium,
-#hard {
+button {
   padding: 3px;
   background-color: rgb(66, 165, 91);
   font-size: 20px;
   text-align: center;
+  margin-left: 10;
 }
 
-#easy:hover,
-#medium:hover,
-#hard:hover {
+button:hover {
   cursor: pointer;
+}
+
+#medium {
+  background-color: yellow;
 }
