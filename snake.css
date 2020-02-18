@@ -1,0 +1,27 @@
+html {
+  text-align: center;
+  font-family: 'Bangers', cursive;
+  background-color: darkslategrey;
+}
+
+canvas {
+  position: absolute;
+  left: 50%;
+  width: 400px;
+  margin-left: -200px;
+}
+
+#easy,
+#medium,
+#hard {
+  padding: 3px;
+  background-color: rgb(66, 165, 91);
+  font-size: 20px;
+  text-align: center;
+}
+
+#easy:hover,
+#medium:hover,
+#hard:hover {
+  cursor: pointer;
+}
