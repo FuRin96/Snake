@@ -193,10 +193,7 @@ function init() {
 }
 
 function update() {
-
-  // check buttons when difficulty selected
-
-
+  
   paintBg();
 
   switch (gameState) {
