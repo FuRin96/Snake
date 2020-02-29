@@ -1,4 +1,5 @@
-var canvas = document.createElement("canvas");
+var canvas = document.createElement('canvas');
+
 setInterval(update, 1000 / 15);
 setInterval(orangePosRandomizer, 5000);
 
@@ -7,15 +8,27 @@ canvas.height = 420;
 
 document.body.appendChild(canvas);
 
-document.addEventListener("keydown", keyPush);
+document.addEventListener('keydown', keyPush);
 
-var ctx = canvas.getContext("2d");
+var ctx = canvas.getContext('2d');
 
 const rowSize = 20;
 const colSize = 20;
 
-var difficulty = 'medium'; // 'easy' 'medium' 'hard'
-var gameState; // 'start' 'playing' 'death'
+const difficulties = {
+  EASY: 'easy',
+  MEDIUM: 'medium',
+  HARD: 'hard'
+}
+var difficulty = difficulties.MEDIUM;
+
+const gameStates = {
+  START: 'start',
+  PLAYING: 'playing',
+  DEATH: 'death'
+}
+var gameState = gameStates.START;
+
 var dead;
 
 // snake-----------------------
@@ -24,7 +37,7 @@ var snakeDir;
 var snakeTrail;
 var snakeSize;
 
-// apple------------------------
+// fruit------------------------
 var applePos;
 
 var orangePos;
@@ -78,92 +91,96 @@ var mapHard = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
-// points-----------------------
+// points----------------------------------------------------------------
 var points = 0;
 
 // STYLES----------------------------------------------------------------------
-function setText() {
+function setText(x, y) {
   ctx.fillStyle = 'white';
-  ctx.font = "20px 'Montserrat', sans-serif"
-  ctx.fillText('Press space to start', 125, 210);
+  ctx.font = '30px "Bangers", cursive'
+  ctx.fillText('Press space to start', x, y);
 }
 
 function deathScreen() {
   ctx.fillStyle = 'red';
-  ctx.font = "100px 'Montserrat', sans-serif"
-  ctx.fillText('You lose', 20, 230);
+  ctx.font = '100px "Bangers", cursive'
+  ctx.fillText('You lose', 50, 245);
 }
 
 // difficulty selector and button colors
-document.getElementById("easy").addEventListener("click", function() {
-  easyMode()
-  document.getElementById("easy").style.backgroundColor = "yellow";
-  document.getElementById("medium").style.backgroundColor = "rgb(66, 165, 91)";
-  document.getElementById("hard").style.backgroundColor = "rgb(66, 165, 91)";
+document.getElementById('easy').addEventListener('click', function() {
+  if (gameState != gameStates.PLAYING) {
+    difficulty = difficulties.EASY;
+    document.getElementById('easy').style.backgroundColor = 'yellow';
+    document.getElementById('medium').style.backgroundColor = 'rgb(66, 165, 91)';
+    document.getElementById('hard').style.backgroundColor = 'rgb(66, 165, 91)';
+  }
 });
-document.getElementById("medium").addEventListener("click", function() {
-  mediumMode()
-  document.getElementById("easy").style.backgroundColor = "rgb(66, 165, 91)";
-  document.getElementById("medium").style.backgroundColor = "yellow";
-  document.getElementById("hard").style.backgroundColor = "rgb(66, 165, 91)";
+document.getElementById('medium').addEventListener('click', function() {
+  if (gameState != gameStates.PLAYING) {
+    difficulty = difficulties.MEDIUM
+    document.getElementById('easy').style.backgroundColor = 'rgb(66, 165, 91)';
+    document.getElementById('medium').style.backgroundColor = 'yellow';
+    document.getElementById('hard').style.backgroundColor = 'rgb(66, 165, 91)';
+  }
 });
-document.getElementById("hard").addEventListener("click", function() {
-  hardMode()
-  document.getElementById("easy").style.backgroundColor = "rgb(66, 165, 91)";
-  document.getElementById("medium").style.backgroundColor = "rgb(66, 165, 91)";
-  document.getElementById("hard").style.backgroundColor = "yellow";
+document.getElementById('hard').addEventListener('click', function() {
+  if (gameState != gameStates.PLAYING) {
+    difficulty = difficulties.HARD;
+    document.getElementById('easy').style.backgroundColor = 'rgb(66, 165, 91)';
+    document.getElementById('medium').style.backgroundColor = 'rgb(66, 165, 91)';
+    document.getElementById('hard').style.backgroundColor = 'yellow';
+  }
 });
 
 // mouseover colors
-document.getElementById("easy").addEventListener("mouseover", function() {
-  document.getElementById("easy").style.backgroundColor = "red";
+document.getElementById('easy').addEventListener('mouseover', function() {
+  document.getElementById('easy').style.backgroundColor = 'red';
 });
 
-document.getElementById("medium").addEventListener("mouseover", function() {
-  document.getElementById("medium").style.backgroundColor = "red";
+document.getElementById('medium').addEventListener('mouseover', function() {
+  document.getElementById('medium').style.backgroundColor = 'red';
 });
 
-document.getElementById("hard").addEventListener("mouseover", function() {
-  document.getElementById("hard").style.backgroundColor = "red";
+document.getElementById('hard').addEventListener('mouseover', function() {
+  document.getElementById('hard').style.backgroundColor = 'red';
 });
 
 // mouseout colors
-document.getElementById("easy").addEventListener("mouseout", function() {
-  if (difficulty == 'easy') {
-    document.getElementById("easy").style.backgroundColor = "yellow";
+document.getElementById('easy').addEventListener('mouseout', function() {
+  if (difficulty == difficulties.EASY) {
+    document.getElementById('easy').style.backgroundColor = 'yellow';
   } else {
-    document.getElementById("easy").style.backgroundColor = "rgb(66, 165, 91)";
+    document.getElementById('easy').style.backgroundColor = 'rgb(66, 165, 91)';
   }
 });
 
-document.getElementById("medium").addEventListener("mouseout", function() {
-  if (difficulty == 'medium') {
-    document.getElementById("medium").style.backgroundColor = "yellow";
+document.getElementById('medium').addEventListener('mouseout', function() {
+  if (difficulty == difficulties.MEDIUM) {
+    document.getElementById('medium').style.backgroundColor = 'yellow';
   } else {
-    document.getElementById("medium").style.backgroundColor = "rgb(66, 165, 91)";
+    document.getElementById('medium').style.backgroundColor = 'rgb(66, 165, 91)';
   }
 });
 
-document.getElementById("hard").addEventListener("mouseout", function() {
-  if (difficulty == 'hard') {
-    document.getElementById("hard").style.backgroundColor = "yellow";
+document.getElementById('hard').addEventListener('mouseout', function() {
+  if (difficulty == difficulties.HARD) {
+    document.getElementById('hard').style.backgroundColor = 'yellow';
   } else {
-    document.getElementById("hard").style.backgroundColor = "rgb(66, 165, 91)";
+    document.getElementById('hard').style.backgroundColor = 'rgb(66, 165, 91)';
   }
 });
 
 //----------------------------------------------------------------------------------
-
 function start() {
-  gameState = 'start';
+  gameState = gameStates.START;
   if (dead == true) {
     deathScreen();
+    setText(100, 300);
   } else {
-    setText();
+    setText(100, 220);
   }
 }
-
-start();
 
 function init() {
   points = 0;
@@ -173,7 +190,7 @@ function init() {
     y: 0
   };
 
-  if (difficulty != 'hard') {
+  if (difficulty != difficulties.HARD) {
     snakePos = {
       x: 10,
       y: 10
@@ -187,39 +204,46 @@ function init() {
   snakeTrail = [];
 
   snakeSize = 5;
-
   applePosRandomizer();
   orangePosRandomizer();
 }
 
+// ----------------------------------------------------------------------
 function update() {
-  
+
   paintBg();
 
   switch (gameState) {
-    case 'start':
-      if (difficulty != 'easy') {
-        paintWall();
+    case gameStates.START:
+      if (difficulty == difficulties.MEDIUM) {
+        paintWall(mapMedium);
+      } else if (difficulty == difficulties.HARD) {
+        paintWall(mapHard);
       }
       start();
       break;
-    case 'playing': // playing state
+    case gameStates.PLAYING: // playing state
+      snakeMovement();
       paintSnake();
 
-      if (difficulty != 'easy') {
-        createWalls();
+      if (difficulty == difficulties.MEDIUM) {
+        paintWall(mapMedium);
+        checkCollisionWall(mapMedium);
+      } else if (difficulty == difficulties.HARD) {
+        paintWall(mapHard);
+        checkCollisionWall(mapHard);
       }
-      paintApple();
-      paintOrange();
-      snakeMovement();
-      eatApple();
-      eatOrange();
+
+      paintFruit('red', applePos.x, applePos.y);
+      paintFruit('orange', orangePos.x, orangePos.y);
+      eatFruit('apple', applePos.x, applePos.y);
+      eatFruit('orange', orangePos.x, orangePos.y);
 
       if (snakeDir.x != 0 || snakeDir.y != 0) {
         checkCollisionSnake();
       }
       break;
-    case 'death':
+    case gameStates.DEATH:
       dead = true;
       start();
       break;
@@ -230,14 +254,14 @@ function update() {
 
 // BACKGROUND----------------------------------------------------
 function paintBg() {
-  ctx.fillStyle = "black";
+  ctx.fillStyle = 'black';
 
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 // SNAKE---------------------------------------------------------------
 function paintSnake() {
-  ctx.fillStyle = "lime";
+  ctx.fillStyle = 'lime';
 
   for (var i = 0; i < snakeTrail.length; i++) {
     ctx.fillRect(snakeTrail[i].x * rowSize, snakeTrail[i].y * colSize, rowSize - 2, colSize - 2);
@@ -253,7 +277,7 @@ function checkCollisionSnake() {
   for (var i = 0; i < snakeTrail.length - 2; i++) {
     if (snakeTrail[snakeTrail.length - 1].x == snakeTrail[i].x && snakeTrail[snakeTrail.length - 1].y == snakeTrail[i]
       .y) {
-      gameState = 'death';
+      gameState = gameStates.DEATH;
     }
   }
 }
@@ -280,17 +304,26 @@ function snakeMovement() {
   });
 }
 
-// APPLE----------------------------------------------------------------------
-function paintApple() {
-  ctx.fillStyle = "red";
+// FRUIT----------------------------------------------------------------------
+function paintFruit(color, x, y) {
+  ctx.fillStyle = color;
 
-  ctx.fillRect(applePos.x, applePos.y, rowSize - 2, colSize - 2);
+  ctx.fillRect(x, y, rowSize - 2, colSize - 2);
 }
 
-function paintOrange() {
-  ctx.fillStyle = "orange";
-
-  ctx.fillRect(orangePos.x, orangePos.y, rowSize - 2, colSize - 2);
+// check fruit position with walls
+function checkFruitPos(map, fruit, x, y) {
+  for (var i = 0; i < map.length; i++) {
+    for (var j = 0; j < map.length; j++) {
+      if (map[i][j] == 1 && x / rowSize == i && y / colSize == j) {
+        if (fruit == 'apple') {
+          applePosRandomizer();
+        } else if (fruit == 'orange') {
+          orangePosRandomizer();
+        }
+      }
+    }
+  }
 }
 
 function applePosRandomizer() {
@@ -305,24 +338,12 @@ function applePosRandomizer() {
     }
   }
 
-  if (difficulty == 'medium') {
-    for (var i = 0; i < mapMedium.length; i++) {
-      for (var j = 0; j < mapMedium.length; j++) {
-        if (mapMedium[i][j] == 1 && applePos.x / rowSize == i && applePos.y / colSize == j) {
-          applePosRandomizer();
-        }
-      }
-    }
+  if (difficulty == difficulties.MEDIUM) {
+    checkFruitPos(mapMedium, 'apple', applePos.x, applePos.y);
   }
 
-  if (difficulty == 'hard') {
-    for (var i = 0; i < mapHard.length; i++) {
-      for (var j = 0; j < mapHard.length; j++) {
-        if (mapHard[i][j] == 1 && applePos.x / rowSize == i && applePos.y / colSize == j) {
-          applePosRandomizer();
-        }
-      }
-    }
+  if (difficulty == difficulties.HARD) {
+    checkFruitPos(mapHard, 'apple', applePos.x, applePos.y);
   }
 }
 
@@ -338,114 +359,60 @@ function orangePosRandomizer() {
     }
   }
 
-  if (difficulty == 'medium') {
-    for (var i = 0; i < mapMedium.length; i++) {
-      for (var j = 0; j < mapMedium.length; j++) {
-        if (mapMedium[i][j] == 1 && orangePos.x / rowSize == i && orangePos.y / colSize == j) {
-          orangePosRandomizer();
-        }
-      }
-    }
+  if (difficulty == difficulties.MEDIUM) {
+    checkFruitPos(mapMedium, 'orange', orangePos.x, orangePos.y);
   }
 
-  if (difficulty == 'hard') {
-    for (var i = 0; i < mapHard.length; i++) {
-      for (var j = 0; j < mapHard.length; j++) {
-        if (mapHard[i][j] == 1 && orangePos.x / rowSize == i && orangePos.y / colSize == j) {
-          orangePosRandomizer();
-        }
-      }
-    }
+  if (difficulty == difficulties.HARD) {
+    checkFruitPos(mapHard, 'orange', orangePos.x, orangePos.y);
   }
-}
 
-
-function eatApple() {
-  if (snakePos.x == applePos.x / rowSize && snakePos.y == applePos.y / colSize) {
-    points++;
-    snakeSize++;
-    applePosRandomizer();
-  }
-}
-
-function eatOrange() {
-  if (snakePos.x == orangePos.x / rowSize && snakePos.y == orangePos.y / colSize) {
-    points += 5;
-    snakeSize += 5;
+  if (orangePos.x == applePos.x && orangePos.y == applePos.y) {
     orangePosRandomizer();
   }
 }
 
-// MODES--------------------------------------------------------------------------------
-function easyMode() {
-  if (gameState != 'playing')
-    difficulty = 'easy';
-}
-
-function mediumMode() {
-  if (gameState != 'playing')
-    difficulty = 'medium';
-}
-
-function hardMode() {
-  if (gameState != 'playing')
-    difficulty = 'hard';
+function eatFruit(fruit, x, y) {
+  if (snakePos.x == x / rowSize && snakePos.y == y / colSize) {
+    if (fruit == 'apple') {
+      points++;
+      snakeSize++;
+      applePosRandomizer();
+    } else if (fruit == 'orange') {
+      points += 5;
+      snakeSize += 5;
+      orangePosRandomizer();
+    }
+  }
 }
 
 // WALLS--------------------------------------------------------------------------------
-function createWalls() {
-  paintWall();
-  checkCollisionWall();
-}
-
-function paintWall() {
-  ctx.fillStyle = "grey";
-  if (difficulty == 'medium') {
-    for (var i = 0; i < mapMedium.length; i++) {
-      for (var j = 0; j < mapMedium.length; j++) {
-        if (mapMedium[i][j] == 1) {
-          ctx.fillRect(i * rowSize, j * colSize, rowSize - 2, colSize - 2);
-        }
-      }
-    }
-  }
-  if (difficulty == 'hard') {
-    for (var i = 0; i < mapHard.length; i++) {
-      for (var j = 0; j < mapHard.length; j++) {
-        if (mapHard[i][j] == 1) {
-          ctx.fillRect(i * rowSize, j * colSize, rowSize - 2, colSize - 2);
-        }
+function paintWall(map) {
+  ctx.fillStyle = 'grey';
+  for (var i = 0; i < map.length; i++) {
+    for (var j = 0; j < map.length; j++) {
+      if (map[i][j] == 1) {
+        ctx.fillRect(i * rowSize, j * colSize, rowSize - 2, colSize - 2);
       }
     }
   }
 }
 
-function checkCollisionWall() {
-  if (difficulty == 'medium') {
-    for (var i = 0; i < mapMedium.length; i++) {
-      for (var j = 0; j < mapMedium.length; j++) {
-        if (mapMedium[i][j] == 1 && snakePos.x == i && snakePos.y == j) {
-          gameState = 'death';
-        }
-      }
-    }
-  }
-
-  if (difficulty == 'hard') {
-    for (var i = 0; i < mapHard.length; i++) {
-      for (var j = 0; j < mapHard.length; j++) {
-        if (mapHard[i][j] == 1 && snakePos.x == i && snakePos.y == j) {
-          gameState = 'death';
-        }
+function checkCollisionWall(map) {
+  for (var i = 0; i < map.length; i++) {
+    for (var j = 0; j < map.length; j++) {
+      if (map[i][j] == 1 && snakePos.x == i && snakePos.y == j) {
+        gameState = gameStates.DEATH;
       }
     }
   }
 }
 
 // MOVEMENT----------------------------------------------------------------
+// move with arrows or WASD
 function keyPush(evt) {
   switch (evt.keyCode) {
-    case 65:
+    case 65: // A
     case 37: // LEFT
       if (snakeDir.x != 1) {
         snakeDir = {
@@ -454,7 +421,7 @@ function keyPush(evt) {
         };
       }
       break;
-    case 87:
+    case 87: // W
     case 38: // UP
       if (snakeDir.y != 1) {
         snakeDir = {
@@ -463,7 +430,7 @@ function keyPush(evt) {
         };
       }
       break;
-    case 68:
+    case 68: // D
     case 39: // RIGHT
       if (snakeDir.x != -1) {
         snakeDir = {
@@ -472,7 +439,7 @@ function keyPush(evt) {
         };
       }
       break;
-    case 83:
+    case 83: // S
     case 40: // DOWN
       if (snakeDir.y != -1) {
         snakeDir = {
@@ -482,8 +449,8 @@ function keyPush(evt) {
       }
       break;
     case 32: // START GAME
-      if (gameState == 'start') {
-        gameState = 'playing';
+      if (gameState == gameStates.START) {
+        gameState = gameStates.PLAYING;
         init();
         dead = false;
       }

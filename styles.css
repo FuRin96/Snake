@@ -5,6 +5,7 @@ html {
 }
 
 canvas {
+  font-family: inherit;
   position: absolute;
   left: 50%;
   width: 400px;
@@ -12,11 +13,12 @@ canvas {
 }
 
 button {
-  padding: 3px;
+  font-family: inherit;
+  padding: 7px;
   background-color: rgb(66, 165, 91);
   font-size: 20px;
-  text-align: center;
-  margin-left: 10;
+  margin-left: 10pt;
+  width: 60pt;
 }
 
 button:hover {
